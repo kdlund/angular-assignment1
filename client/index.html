@@ -18,81 +18,41 @@
       </div>
     </nav>
 
-    <div ng-controller="MainCtrl as main" class="container">
-
-<!-- search by ZIP --->
-      <form ng-submit="main.searchByZip(main.inputs.zip)" class="form-inline">
-
-      <div class="form-group">
-        <label>
-          Zip Code: <input class="form-control" type="string" ng-model="main.inputs.zip" />
-        </label>
-      </div>
 
 
-        <button class="btn btn-info" type="submit">Search Zip Code</button>
-      </form>
+<div ng-controller="MainCtrl as main" class="container">
 
-      <!-- search by name representatives--->
+    <div class='radio'>
+      <label>
+        <input type='radio' ng-model='main.congressType' value='reps' />
+        Representatives
+      </label>
+    </div>
 
-      <form ng-submit="main.searchByName(main.inputs.repName)" class="form-inline">
+    <div class='radio'>
+      <label>
+        <input type='radio' ng-model='main.congressType' value='sens' />
+        Senators
+      </label>
+    </div>
 
-      <div class="form-group">
-        <label>
-          Search Rep by Name: <input class="form-control" type="string" ng-model="main.inputs.repName" />
-        </label>
-      </div>
+<form class="form-inline">
+    <select class="form-control" ng-model="main.criteria" ng-options="item as item.label for item in main.apis" ng-change="main.input = ''"></select>
+    <input class="form-control" type="text" ng-model="main.input" ng-disabled="main.loading" autofocus/>
+    <button class="btn btn-info" ng-click="main.criteria.method (main.input)" ng-disabled="main.loading || !main.input" type="submit">Submit</button>
 
-
-        <button class="btn btn-info" type="submit">Search Rep Name</button>
-      </form>
-
-      <!-- search by STATE representatives--->
-
-      <form ng-submit="main.searchByState(main.inputs.repState)" class="form-inline">
-
-      <div class="form-group">
-        <label>
-          Search Rep by State: <input class="form-control" type="string" ng-model="main.inputs.repState" />
-        </label>
-      </div>
-
-
-        <button class="btn btn-info" type="submit">Search Rep State</button>
-      </form>
-
-      <!-- search by NAME SENATORS--->
-
-      <form ng-submit="main.searchSensByName(main.inputs.senName)" class="form-inline">
-
-      <div class="form-group">
-        <label>
-          Search Senator by Name: <input class="form-control" type="string" ng-model="main.inputs.senName" />
-        </label>
-      </div>
-
-
-        <button class="btn btn-info" type="submit">Search Senator Name</button>
-      </form>
-
-      <!-- search by STATE SENATORS--->
-
-      <form ng-submit="main.searchSensByState(main.inputs.senState)" class="form-inline">
-
-      <div class="form-group">
-        <label>
-          Search Senator by State: <input class="form-control" type="string" ng-model="main.inputs.senState" />
-        </label>
-      </div>
-
-
-        <button class="btn btn-info" type="submit">Search Senator State</button>
-      </form>
+</form>
 
       <ul class="list-group">
-        <li class="list-group-item" ng-repeat="rep in main.reps">
-          <h4 class="list-group-item-heading">{{rep.name}}</h4>
-          <p> State: {{rep.state}}</p>
+        <li class = "list-group-item" ng-show="main.loading">
+          Loading...
+        </li>
+        <li class="list-group-item" ng-show="main.reps.length === 0 && !main.loading">
+          No Results
+        </li>
+        <li ng-hide="main.loading" class="list-group-item" ng-repeat="rep in main.reps">
+            <h4 class="list-group-item-heading">{{rep.name}}</h4>
+            <p> State: {{rep.state}}</p>
         </li>
 
 
